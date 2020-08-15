@@ -27,6 +27,9 @@ function buildTable(data) {
 var filters = {};
 // This function will replace your handleClick function
 function updateFilters() {
+	// Save the element, value, and id of the filter that was changed 
+	// If a filter value was entered then add that filterId and value  
+	// to the filters list. Otherwise, clear that filter from the filters object 
 
 	let datetime = d3.select("#datetime").property("value");
 	let city = d3.select("#city").property("value");
@@ -35,19 +38,23 @@ function updateFilters() {
 	let shape = d3.select("#shape").property("value");
 	let filteredData = tableData;
 
+	// Array to hold filter keys
 	let valueArray = ['datetime', 'city', 'state', 'country', 'shape'];
 
+	// checking for input, if value is not null we add to our filter object
 	var i;
 	for (i = 0; i < valueArray.length; i++) {
 		if (d3.select("#" + valueArray[i]).property("value") != null) {
+
 			filters[valueArray[i]] = d3.select("#" + valueArray[i]).property("value");
 		}
 	};
 
-	// Save the element, value, and id of the filter that was changed 
+	// setting filter values to lowercase since they are all lowercase in the dataset
+	for (var x in filters) {
+		filters[x] = filters[x].toLowerCase();
+	}
 
-	// If a filter value was entered then add that filterId and value  
-	// to the filters list. Otherwise, clear that filter from the filters object  
 	// Call function to apply all filters and rebuild the table  
 	filterTable(filteredData);
 }
@@ -70,9 +77,6 @@ function filterTable(filteredData) {
 }
 
 // Attach an event to listen for changes to each filter
-// Hint: You'll need to select the event and what it is listening for within each 
-// set of parenthesis
-
 d3.selectAll("#filter-btn").on("click", updateFilters);
 
 // Build the table when the page loads
